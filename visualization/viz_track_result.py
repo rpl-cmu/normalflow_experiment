@@ -8,11 +8,10 @@ import numpy as np
 
 from normalflow.utils import transform2pose
 
-# TODO: Add the dataset link
 """
 This script compares the tracking results of different methods for each object.
 With the dataset that comes with the paper, the script can generate the comparison 
-figure like the Fig. 5 and Fig. 12 in the paper.
+figure in Fig. 5 of the paper.
 
 Pre-requisite:
     - Please download the official dataset that comes with the paper.

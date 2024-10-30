@@ -15,7 +15,7 @@ setup(
     entry_points={
         'console_scripts': [
             'track=track.track:track',
-            "long_horizon_track=track.long_horizon_track:long_horizon_track",
+            'viz_track_result=visualization.viz_track_result:viz_track_result',
             'viz_track=visualization.viz_track:viz_track',
         ],
     },
