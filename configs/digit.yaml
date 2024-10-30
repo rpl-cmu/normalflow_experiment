@@ -1,0 +1,11 @@
+# Device Name
+device_name: "DIGIT"
+# Pixel Per Millimeter
+ppmm: 0.0405
+# Desired Image Width and Height
+imgh: 240
+imgw: 320
+# Raw image width, height, and framerate
+raw_imgh: 480
+raw_imgw: 640
+framerate: 60
