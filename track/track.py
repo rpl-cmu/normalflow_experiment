@@ -6,7 +6,7 @@ import yaml
 
 from baselines.registration import fpfh, icp, filterreg
 from gs_sdk.gs_reconstruct import poisson_dct_neumaan
-from normalflow.registration import normalflow
+from normalflow.registration import normalflow, InsufficientOverlapError
 from normalflow.utils import gxy2normal, erode_contact_mask
 
 """
@@ -29,7 +29,7 @@ Before running, the required dataset needs to have:
     - gradient_maps.npy: The gradient maps of the frames.
 
 After running, the dataset will additionally includes:
-    - {method}_transforms.npy: The estimated transformation matrices of the object poses.
+    - {method}_start_T_currs.npy: The estimated transformation matrices of the object poses.
 """
 
 config_path = os.path.join(os.path.dirname(__file__), "../configs/gsmini.yaml")
@@ -78,7 +78,7 @@ def track():
     # Track the sensor transformation relative to the reference frame
     curr_T_ref_init = np.eye(4)
     start_T_ref = np.eye(4)
-    est_transforms = [np.eye(4)]
+    est_start_T_currs = [np.eye(4)]
     for G_curr, C_curr in zip(gradient_maps[1:], contact_masks[1:]):
         # Load and compute the surface information of the target frame
         G_curr = G_curr.astype(np.float32)
@@ -88,16 +88,19 @@ def track():
         )
         N_curr = gxy2normal(G_curr)
         if args.method == "nf":
-            curr_T_ref = normalflow(
-                N_ref,
-                C_ref,
-                H_ref,
-                N_curr,
-                C_curr,
-                H_curr,
-                curr_T_ref_init,
-                ppmm,
-            )
+            try:
+                curr_T_ref = normalflow(
+                    N_ref,
+                    C_ref,
+                    H_ref,
+                    N_curr,
+                    C_curr,
+                    H_curr,
+                    curr_T_ref_init,
+                    ppmm,
+                )
+            except InsufficientOverlapError:
+                curr_T_ref = curr_T_ref_init
         elif args.method == "icp":
             curr_T_ref = icp(
                 N_ref, C_ref, H_ref, N_curr, C_curr, H_curr, curr_T_ref_init, ppmm
@@ -113,9 +116,9 @@ def track():
         else:
             raise ValueError("Invalid tracking method %s" % args.method)
         curr_T_ref_init = curr_T_ref
-        est_transforms.append(np.linalg.inv(curr_T_ref))
-    save_path = os.path.join(parent_dir, "%s_transforms.npy" % (args.method))
-    np.save(save_path, np.array(est_transforms))
+        est_start_T_currs.append(np.linalg.inv(curr_T_ref))
+    save_path = os.path.join(parent_dir, "%s_start_T_currs.npy" % (args.method))
+    np.save(save_path, np.array(est_start_T_currs))
     print(
         "Object pose tracked with %s method for data in %s" % (args.method, parent_dir)
     )

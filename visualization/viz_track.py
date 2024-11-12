@@ -22,10 +22,10 @@ Arguments:
             The default is 'nf', representing the normal flow method.
 
 Before running, the required dataset needs to have:
-    - gelsight.mp4: The GelSight video.
+    - gelsight.avi: The GelSight video.
     - contact_masks.npy: The contact masks of the frames.
-    - {method}_transforms.npy: The estimated transformation matrices of the object poses.
-    - (Optional) true_transforms.npy: The ground truth transformation matrices of the object poses.
+    - {method}_start_T_currs.npy: The estimated transformation matrices of the object poses.
+    - (Optional) true_start_T_currs.npy: The ground truth transformation matrices of the object poses.
 
 After running, the dataset will additionally includes:
     - {method}_tracking.mp4: The tracking video.
@@ -71,7 +71,7 @@ def viz_track():
 
     # Load the tactile images
     parent_dir = args.parent_dir
-    cap = cv2.VideoCapture(os.path.join(parent_dir, "gelsight.mp4"))
+    cap = cv2.VideoCapture(os.path.join(parent_dir, "gelsight.avi"))
     fps = cap.get(cv2.CAP_PROP_FPS)
     images = []
     while cap.isOpened():
@@ -82,10 +82,10 @@ def viz_track():
     cap.release()
     contact_masks = np.load(os.path.join(parent_dir, "contact_masks.npy"))
     est_start_T_currs = np.load(
-        os.path.join(parent_dir, args.method + "_transforms.npy")
+        os.path.join(parent_dir, args.method + "_start_T_currs.npy")
     )
-    if os.path.exists(os.path.join(parent_dir, "true_transforms.npy")):
-        gt_start_T_currs = np.load(os.path.join(parent_dir, "true_transforms.npy"))
+    if os.path.exists(os.path.join(parent_dir, "true_start_T_currs.npy")):
+        gt_start_T_currs = np.load(os.path.join(parent_dir, "true_start_T_currs.npy"))
 
     # Load, compute the center, and annotate the initial frame
     F_start = images[0]
@@ -143,7 +143,7 @@ def viz_track():
         )
 
         # Annotate the true transformation if available
-        if os.path.exists(os.path.join(parent_dir, "true_transforms.npy")):
+        if os.path.exists(os.path.join(parent_dir, "true_start_T_currs.npy")):
             gt_start_T_curr = gt_start_T_currs[image_idx]
             gt_curr_T_start = np.linalg.inv(gt_start_T_curr)
 
@@ -191,8 +191,8 @@ def viz_track():
 
         tracked_frames.append(cv2.hconcat([annotated_F_start, annotated_F_curr]))
     # Save the video
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    save_path = os.path.join(parent_dir, args.method + "_tracking.mp4")
+    fourcc = cv2.VideoWriter_fourcc(*"FFV1")
+    save_path = os.path.join(parent_dir, args.method + "_tracking.avi")
     video = cv2.VideoWriter(save_path, fourcc, fps, (imgw * 2, imgh))
     for tracked_frame in tracked_frames:
         video.write(tracked_frame)

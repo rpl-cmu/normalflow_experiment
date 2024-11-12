@@ -24,11 +24,11 @@ Arguments:
     --parent_dir: The directory where the dataset is located.
 
 Before running, each trial in the dataset should have:
-    - true_transforms.npy: The ground truth transformation of sensor poses.
-    - nf_transforms.npy: The estimated transformation using NormalFlow.
-    - filterreg_transforms.npy: The estimated transformation using FilterReg.
-    - icp_transforms.npy: The estimated transformation using ICP.
-    - fpfh_transforms.npy: The estimated transformation using FPFH+RI.
+    - true_start_T_currs.npy: The ground truth transformation of sensor poses.
+    - nf_start_T_currs.npy: The estimated transformation using NormalFlow.
+    - filterreg_start_T_currs.npy: The estimated transformation using FilterReg.
+    - icp_start_T_currs.npy: The estimated transformation using ICP.
+    - fpfh_start_T_currs.npy: The estimated transformation using FPFH+RI.
 
 After running, the dataset will additionally generate the comparison plots between each
 method for each object. The comparison plots will be saved in the parent directory.
@@ -74,11 +74,11 @@ def viz_track_result():
         for idx in matching_indices:
             trial_name = trial_names[idx]
             trial_dir = os.path.join(parent_dir, trial_name)
-            gt_start_T_currs = np.load(os.path.join(trial_dir, "true_transforms.npy"))
+            gt_start_T_currs = np.load(os.path.join(trial_dir, "true_start_T_currs.npy"))
             for method in methods:
                 data = {"est_poses": [], "gt_poses": []}
                 est_start_T_currs = np.load(
-                    os.path.join(trial_dir, "%s_transforms.npy" % method)
+                    os.path.join(trial_dir, "%s_start_T_currs.npy" % method)
                 )
                 for gt_start_T_curr, est_start_T_curr in zip(
                     gt_start_T_currs[1:], est_start_T_currs[1:]

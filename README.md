@@ -41,7 +41,7 @@ We also provide tools to visualize tracking results. After running the `track` c
 ```bash
 viz_track [-p TRIAL_DIR ] [-m {nf|filterreg|icp|fpfh}]
 ```
-This will save a tracking video named `{method}_tracking.mp4` in the specified `TRIAL_DIR`.
+This will save a tracking video named `{method}_tracking.avi` in the specified `TRIAL_DIR`.
 
 
 
