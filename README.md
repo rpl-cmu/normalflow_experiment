@@ -1,22 +1,19 @@
 # NormalFlow Experiments
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) &nbsp;[<img src="assets/rpl.png" height=20px>](https://rpl.ri.cmu.edu/)
 
-This repository houses the baseline implementation and scripts to run the main experiment presented in our paper *NormalFlow: Fast, Robust, and Accurate Contact-based Object 6DoF Pose Tracking with Vision-based Tactile Sensors* ([Paper Link](TODO: Link)). It compares the tracking performance of NormalFlow and baseline algorithms on our dataset. If you use this package, please cite our paper:
+This repository contains the baseline implementation and scripts to run the main experiment presented in our paper [*NormalFlow: Fast, Robust, and Accurate Contact-based Object 6DoF Pose Tracking with Vision-based Tactile Sensors*](https://ieeexplore.ieee.org/document/10766628). It compares the tracking performance of NormalFlow against baseline algorithms on our dataset. Please check our paper for more details.
 
-[TODO: Citation block]
-
-Before starting, please download our object tracking dataset ([Dataset Link](TODO: link)) and install our NormalFlow package ([NormalFlow Package Link](TODO: link)).
+Before starting, please download our [tactile-based object tracking dataset](https://huggingface.co/datasets/joehjhuang/TactileTracking), install our [NormalFlow package](https://github.com/rpl-cmu/normalflow), and install the [GelSight SDK](https://github.com/joehjhuang/gs_sdk).
 
 
 ## Support System
 * Tested on Ubuntu 22.04
 * Python >= 3.9
-* Install the [gs_sdk](TODO: link)
-* Install the [normalflow](TODO: link)
 
 ## Installation
 Clone and install normalflow_experiment from source:
 ```bash
-git clone [TODO: link]
+git clone git@github.com:rpl-cmu/normalflow_experiment.git
 cd normalflow_experiment
 pip install -e .
 ```
@@ -36,12 +33,27 @@ viz_track_result -p DATASET_DIR
 ```
 The comparison figures will be saved in `DATASET_DIR` and should reproduce Fig. 5 from our NormalFlow paper.
 
-## (Optional) Visualize Tracking Results
+## Visualize Tracking Results
 We also provide tools to visualize tracking results. After running the `track` command above, you can visualize the tracking outcome of a specific method on a particular trial within the dataset by running:
 ```bash
 viz_track [-p TRIAL_DIR ] [-m {nf|filterreg|icp|fpfh}]
 ```
 This will save a tracking video named `{method}_tracking.avi` in the specified `TRIAL_DIR`.
+
+## Cite Us
+If you find this package useful, please consider citing our paper:
+```
+@ARTICLE{huang2024normalflow,
+    author={Huang, Hung-Jui and Kaess, Michael and Yuan, Wenzhen},
+    journal={IEEE Robotics and Automation Letters}, 
+    title={NormalFlow: Fast, Robust, and Accurate Contact-based Object 6DoF Pose Tracking with Vision-based Tactile Sensors}, 
+    year={2024},
+    volume={},
+    number={},
+    pages={1-8},
+    keywords={Force and Tactile Sensing, 6DoF Object Tracking, Surface Reconstruction, Perception for Grasping and Manipulation},
+    doi={10.1109/LRA.2024.3505815}}
+```
 
 
 
